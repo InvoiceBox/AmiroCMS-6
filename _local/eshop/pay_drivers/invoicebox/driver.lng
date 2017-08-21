@@ -1,0 +1,39 @@
+%%driver_title%en%%
+InvoiceBox
+%%driver_title%ru%%
+InvoiceBox
+
+%%im_invoicebox_participant_id%en%%
+ID shop
+%%im_invoicebox_participant_id%ru%%
+ID магазина
+
+%%im_invoicebox_participant_ident%en%%
+Region code shop
+%%im_invoicebox_participant_ident%ru%%
+Региональный код магазина
+
+%%im_invoicebox_api_key%en%%
+API key
+%%im_invoicebox_api_key%ru%%
+Ключ безопасности
+
+%%im_invoicebox_testmode%en%%
+Test mode
+%%im_invoicebox_testmode%ru%%
+Тестовый режим
+
+%%driver_button_caption%en%%
+Pay using InvoiceBox
+%%driver_button_caption%ru%%
+Заплатить через InvoiceBox
+
+%%im_invoicebox_testmode_on%en%%
+On
+%%im_invoicebox_testmode_on%ru%%
+Включен
+
+%%im_invoicebox_testmode_off%en%%
+Off
+%%im_invoicebox_testmode_off%ru%%
+Выключен
