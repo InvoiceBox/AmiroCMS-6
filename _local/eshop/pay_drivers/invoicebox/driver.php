@@ -35,24 +35,54 @@ class Invoicebox_PaymentSystemDriver extends AMI_PaymentSystemDriver {
                 $aData['driver_currency'] .
                 $aData['im_invoicebox_api_key']
         );
+		$orderId = (int)$aData['order_id'];
+        $oOrder =
+            AMI::getResourceModel('eshop_order/table')
+            ->find($orderId);
+        if($orderId != $oOrder->id){
+            $message = "Invalid order id '" . $aData['order_id'] . "'";
+            $this->reportError($message);
+            $aRes['error'] = $message;
+            $aRes['errno'] = self::ERROR_INVALID_ORDER_ID;
 
-        $oList = AMI::getResourceModel('eshop_order_item/table')->getList()->addColumn('*')->addWhereDef('AND i.id_order = ' . $aData['order_id'])->load();
+            return FALSE;
+        }
+		
+		
         $itemNo = 0;
         $basketItemhtml = '';
         $measure = "шт.";
-        foreach ($oList as $oItem) {
+		$oOrderProductList =
+            AMI::getResourceModel('eshop_order_item/table', array(array('doRemapListItems' => TRUE)))
+            ->getList()
+            ->addColumn('*')
+            ->addSearchCondition(array('id_order' => $orderId))
+            ->load();
+        foreach ($oOrderProductList as $oItem) {
+			$aProduct = $oItem->data;
+            $aProduct = $aProduct['item_info'];
+			
             $itemNo++;
             $quantity +=$oItem->qty;
-            $product_id = $oItem->id_product;
-            $oProduct = AMI::getResourceModel('eshop_item/table')->find($product_id, array('*'));
-            $name = $oProduct->header;
-            $price = $oItem->price;
+            $name = $aProduct['name'];
+            $price = $aProduct['price']+$aProduct['tax_item'];
+			$tax_item_value = $aProduct['tax_item_value'];
             $qty = $oItem->qty;
             $basketItemhtml .= '<input type="hidden" name="itransfer_item' . $itemNo . '_name" value="' . $name . '" />' . "\n";
             $basketItemhtml .= '<input type="hidden" name="itransfer_item' . $itemNo . '_quantity" value="' . $qty . '" />' . "\n";
             $basketItemhtml .= '<input type="hidden" name="itransfer_item' . $itemNo . '_measure" value="' . $measure . '" />' . "\n";
             $basketItemhtml .= '<input type="hidden" name="itransfer_item' . $itemNo . '_price" value="' . $price . '" />' . "\n";
+			$basketItemhtml .= '<input type="hidden" name="itransfer_item' . $itemNo . '_vatrate" value="' . $aProduct['tax_item_value'] . '" />' . "\n";
+			$basketItemhtml .= '<input type="hidden" name="itransfer_item' . $itemNo . '_vat" value="' . $aProduct['tax_item'] . '" />' . "\n";
         }
+		if($oOrder->shipping > 0){
+			$itemNo++;
+			$basketItemhtml .= '<input type="hidden" name="itransfer_item' . $itemNo . '_name" value="Доставка" />' . "\n";
+            $basketItemhtml .= '<input type="hidden" name="itransfer_item' . $itemNo . '_quantity" value="1" />' . "\n";
+            $basketItemhtml .= '<input type="hidden" name="itransfer_item' . $itemNo . '_measure" value="' . $measure . '" />' . "\n";
+            $basketItemhtml .= '<input type="hidden" name="itransfer_item' . $itemNo . '_price" value="' . $oOrder->shipping . '" />' . "\n";
+			
+		}
         $aData['basketItemhtml'] = $basketItemhtml;
         $aData['hiddens'] = $this->getScopeAsFormHiddenFields(array(
             'itransfer_participant_id' => $aData['im_invoicebox_participant_id'],
