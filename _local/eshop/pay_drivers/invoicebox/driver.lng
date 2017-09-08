@@ -4,19 +4,19 @@ InvoiceBox
 InvoiceBox
 
 %%im_invoicebox_participant_id%en%%
-ID shop
+Merchant ID
 %%im_invoicebox_participant_id%ru%%
-ID магазина
+Идентификатор магазина
 
 %%im_invoicebox_participant_ident%en%%
-Region code shop
+Merchant regional code
 %%im_invoicebox_participant_ident%ru%%
 Региональный код магазина
 
 %%im_invoicebox_api_key%en%%
 API key
 %%im_invoicebox_api_key%ru%%
-Ключ безопасности
+Ключ безопасности (API ключ)
 
 %%im_invoicebox_testmode%en%%
 Test mode
@@ -26,12 +26,12 @@ Test mode
 %%driver_button_caption%en%%
 Pay using InvoiceBox
 %%driver_button_caption%ru%%
-Заплатить через InvoiceBox
+Оплатить через InvoiceBox
 
 %%im_invoicebox_testmode_on%en%%
 On
 %%im_invoicebox_testmode_on%ru%%
-Включен
+Включён
 
 %%im_invoicebox_testmode_off%en%%
 Off
